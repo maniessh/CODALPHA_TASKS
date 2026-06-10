@@ -1,33 +1,17 @@
-
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Cursor;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.event.ActionListener;
+import javax.swing.*;
+import javax.swing.table.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.util.ArrayList;
 
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextArea;
-import javax.swing.SwingUtilities;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
- 
 /**
  * Task 1: Student Grade Tracker
  * Features: Add/Remove students, calculate avg/highest/lowest,
  *           letter grades, color-coded table, summary report
  */
-public class Studentgradetracker extends JFrame {
+public class StudentGradeTracker extends JFrame {
+
+    // ─── Data Model ──────────────────────────────────────────────
     static class Student {
         String name;
         ArrayList<Double> grades;
@@ -68,13 +52,13 @@ public class Studentgradetracker extends JFrame {
         }
     }
 
-    
+    // ─── State ───────────────────────────────────────────────────
     private final ArrayList<Student> students = new ArrayList<>();
     private DefaultTableModel tableModel;
     private JLabel lblSummary;
 
-    
-    public Studentgradetracker() {
+    // ─── Constructor ─────────────────────────────────────────────
+    public StudentGradeTracker() {
         setTitle("Student Grade Tracker");
         setSize(900, 580);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -91,7 +75,7 @@ public class Studentgradetracker extends JFrame {
         setVisible(true);
     }
 
-    
+    // ─── Header ──────────────────────────────────────────────────
     private JPanel buildHeader() {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 10));
         panel.setBackground(new Color(20, 20, 35));
@@ -110,10 +94,10 @@ public class Studentgradetracker extends JFrame {
         return panel;
     }
 
+    // ─── Table ───────────────────────────────────────────────────
     private JScrollPane buildTable() {
         String[] cols = {"Name", "Grades", "Average", "Highest", "Lowest", "Letter", "Status"};
         tableModel = new DefaultTableModel(cols, 0) {
-            
             public boolean isCellEditable(int r, int c) { return false; }
         };
 
@@ -125,11 +109,13 @@ public class Studentgradetracker extends JFrame {
         table.setGridColor(new Color(70, 70, 90));
         table.setSelectionBackground(new Color(0, 123, 200));
 
+        // Header style
         JTableHeader header = table.getTableHeader();
         header.setFont(new Font("Segoe UI", Font.BOLD, 14));
         header.setBackground(new Color(20, 20, 40));
         header.setForeground(new Color(100, 200, 255));
 
+        // Color-coded Status/Letter renderer
         table.getColumnModel().getColumn(6).setCellRenderer(new DefaultTableCellRenderer() {
             public Component getTableCellRendererComponent(JTable t, Object val,
                     boolean sel, boolean foc, int row, int col) {
@@ -162,6 +148,7 @@ public class Studentgradetracker extends JFrame {
         return scroll;
     }
 
+    // ─── Bottom Summary Bar ──────────────────────────────────────
     private JPanel buildBottom() {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 8));
         panel.setBackground(new Color(20, 20, 35));
@@ -172,6 +159,7 @@ public class Studentgradetracker extends JFrame {
         return panel;
     }
 
+    // ─── Dialogs ─────────────────────────────────────────────────
     private void showAddStudentDialog() {
         String name = JOptionPane.showInputDialog(this, "Enter student name:", "Add Student", JOptionPane.PLAIN_MESSAGE);
         if (name != null && !name.trim().isEmpty()) {
@@ -242,6 +230,7 @@ public class Studentgradetracker extends JFrame {
         JOptionPane.showMessageDialog(this, new JScrollPane(area), "Full Report", JOptionPane.INFORMATION_MESSAGE);
     }
 
+    // ─── Refresh Table ───────────────────────────────────────────
     private void refreshTable() {
         tableModel.setRowCount(0);
         for (Student s : students) {
@@ -268,6 +257,7 @@ public class Studentgradetracker extends JFrame {
             total, passed, total - passed, classAvg));
     }
 
+    // ─── Sample Data ─────────────────────────────────────────────
     private void loadSampleData() {
         String[][] data = {
             {"Alice",  "92,88,95,91"},
@@ -282,6 +272,7 @@ public class Studentgradetracker extends JFrame {
         }
     }
 
+    // ─── Utility ─────────────────────────────────────────────────
     private JButton styledButton(String text, Color bg, ActionListener al) {
         JButton btn = new JButton(text);
         btn.setBackground(bg);
@@ -295,6 +286,6 @@ public class Studentgradetracker extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(Studentgradetracker::new);
+        SwingUtilities.invokeLater(StudentGradeTracker::new);
     }
 }
